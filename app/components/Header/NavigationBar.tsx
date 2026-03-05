@@ -46,9 +46,10 @@ interface MegamenuConfig {
 interface NavigationBarProps {
   headerMenu?: ParentEnhancedMenuItem[] | null;
   headerData?: HeaderMenuQuery;
+  isHome?: boolean;
 }
 
-export default function NavigationBar({headerMenu, headerData}: NavigationBarProps) {
+export default function NavigationBar({headerMenu, headerData, isHome}: NavigationBarProps) {
   if (!headerMenu || !Array.isArray(headerMenu) || headerMenu.length === 0) {
     return null;
   }
@@ -56,7 +57,7 @@ export default function NavigationBar({headerMenu, headerData}: NavigationBarPro
   const megamenuConfigs = (headerData as any)?.megamenuConfigs?.nodes || [];
 
   return (
-    <div className="nc-NavigationBar bg-white dark:bg-slate-900 border-t border-slate-200/70 dark:border-slate-700">
+    <div className={`nc-NavigationBar ${isHome ? 'lg:bg-transparent lg:border-transparent' : 'bg-white dark:bg-slate-900 border-t border-slate-200/70 dark:border-slate-700'}`}>
       <div className="container-fluid relative">
         <nav className="nc-Navigation flex justify-center items-center py-0">
           <ul className="nc-Navigation hidden lg:flex items-center space-x-1">
@@ -71,6 +72,7 @@ export default function NavigationBar({headerMenu, headerData}: NavigationBarPro
                   menuItem={item}
                   headerData={headerData}
                   megamenuConfig={megamenuConfig}
+                  isHome={isHome}
                 />
               );
             })}
@@ -85,10 +87,12 @@ function NavItem({
   menuItem,
   headerData,
   megamenuConfig,
+  isHome,
 }: {
   menuItem: ParentEnhancedMenuItem;
   headerData?: HeaderMenuQuery;
   megamenuConfig?: MegamenuConfig;
+  isHome?: boolean;
 }) {
   const hasChildren = menuItem.items && menuItem.items.length > 0;
   const hasCustomMegamenu = megamenuConfig?.sections?.references?.nodes?.length;
@@ -101,7 +105,7 @@ function NavItem({
             to={menuItem.to}
             target={menuItem.target}
             prefetch="intent"
-            className="inline-flex items-center text-sm lg:text-sm font-medium text-black dark:text-slate-300 py-4 px-4 hover:bg-[#efefef] dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-100 rounded-lg transition-colors"
+            className={`inline-flex items-center text-sm lg:text-sm font-medium py-4 px-4 rounded-lg transition-colors ${isHome ? 'text-white hover:bg-white/10' : 'text-black dark:text-slate-300 hover:bg-[#efefef] dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-100'}`}
           >
             {menuItem.title}
           </Link>
@@ -109,7 +113,7 @@ function NavItem({
           <a
             href={menuItem.to}
             target={menuItem.target}
-            className="inline-flex items-center text-sm lg:text-sm font-medium text-black dark:text-slate-300 py-4 px-4 hover:bg-[#efefef] dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-100 rounded-lg transition-colors"
+            className={`inline-flex items-center text-sm lg:text-sm font-medium py-4 px-4 rounded-lg transition-colors ${isHome ? 'text-white hover:bg-white/10' : 'text-black dark:text-slate-300 hover:bg-[#efefef] dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-100'}`}
           >
             {menuItem.title}
           </a>
@@ -145,8 +149,10 @@ function NavItem({
           to={menuItem.to}
           prefetch="intent"
           className={`
-            ${isHovered ? 'text-slate-900 dark:text-slate-100 bg-[#efefef] dark:bg-slate-800' : 'text-black dark:text-slate-300'}
-            group inline-flex items-center text-sm lg:text-sm font-medium py-4 px-4 hover:bg-[#efefef] dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-100 rounded-lg focus:outline-none transition-colors`}
+            ${isHome 
+              ? (isHovered ? 'text-white bg-white/10' : 'text-white')
+              : (isHovered ? 'text-slate-900 dark:text-slate-100 bg-[#efefef] dark:bg-slate-800' : 'text-black dark:text-slate-300')}
+            group inline-flex items-center text-sm lg:text-sm font-medium py-4 px-4 ${isHome ? 'hover:bg-white/10' : 'hover:bg-[#efefef] dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-100'} rounded-lg focus:outline-none transition-colors`}
         >
           <span>{menuItem.title}</span>
           <ChevronDownIcon
@@ -159,8 +165,10 @@ function NavItem({
           href={menuItem.to}
           target={menuItem.target}
           className={`
-            ${isHovered ? 'text-slate-900 dark:text-slate-100 bg-[#efefef] dark:bg-slate-800' : 'text-slate-700 dark:text-slate-300'}
-            group inline-flex items-center text-sm lg:text-base font-medium py-4 px-4 hover:bg-[#efefef] dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-100 rounded-lg focus:outline-none transition-colors`}
+            ${isHome
+              ? (isHovered ? 'text-white bg-white/10' : 'text-white')
+              : (isHovered ? 'text-slate-900 dark:text-slate-100 bg-[#efefef] dark:bg-slate-800' : 'text-slate-700 dark:text-slate-300')}
+            group inline-flex items-center text-sm lg:text-base font-medium py-4 px-4 ${isHome ? 'hover:bg-white/10' : 'hover:bg-[#efefef] dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-100'} rounded-lg focus:outline-none transition-colors`}
         >
           <span>{menuItem.title}</span>
           <ChevronDownIcon

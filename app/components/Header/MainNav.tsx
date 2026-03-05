@@ -39,7 +39,10 @@ const MainNav: FC<Props> = ({className = '', isHome, brands = [], quickLinks}) =
     <div
       className={clsx(
         className,
-        'nc-MainNav2 relative z-10 bg-white dark:bg-slate-900',
+        'nc-MainNav2 relative z-10',
+        isHome
+          ? 'bg-white lg:bg-transparent lg:text-white'
+          : 'bg-white dark:bg-slate-900',
       )}
     >
       <div className="px-8">
@@ -63,7 +66,12 @@ const MainNav: FC<Props> = ({className = '', isHome, brands = [], quickLinks}) =
             </button>
             {/* Desktop button - opens mega menu */}
             <button
-              className="hidden lg:flex items-center gap-2 px-3 py-2 rounded-lg text-slate-900 dark:text-slate-100 hover:bg-[#efefef] dark:hover:bg-slate-800 focus:outline-none transition-colors"
+              className={clsx(
+                'hidden lg:flex items-center gap-2 px-3 py-2 rounded-lg focus:outline-none transition-colors',
+                isHome
+                  ? 'text-white hover:bg-white/10'
+                  : 'text-slate-900 dark:text-slate-100 hover:bg-[#efefef] dark:hover:bg-slate-800',
+              )}
               onClick={() => open('desktop-menu')}
               type="button"
               aria-label="Open menu"
@@ -83,14 +91,22 @@ const MainNav: FC<Props> = ({className = '', isHome, brands = [], quickLinks}) =
               className="relative w-full"
             >
               <div className="relative">
-                <span className="absolute left-2 top-1/2 -translate-y-1/2 text-black">
+                <span className={clsx(
+                  'absolute left-2 top-1/2 -translate-y-1/2',
+                  isHome ? 'text-white' : 'text-black',
+                )}>
                   <svg className="w-4 h-4" width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11.5 21C16.7467 21 21 16.7467 21 11.5C21 6.25329 16.7467 2 11.5 2C6.25329 2 2 6.25329 2 11.5C2 16.7467 6.25329 21 11.5 21Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M22 22L20 20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
                 </span>
                 <input
                   type="search"
                   name="q"
                   placeholder="Buscar productos..."
-                  className="w-full h-11 pl-12 pr-4 border-none bg-[#ededed] text-sm  dark:border-slate-700 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent placeholder:text-black dark:placeholder:text-slate-500 text-slate-900 dark:text-slate-100"
+                  className={clsx(
+                    'w-full h-11 pl-12 pr-4 border-none text-sm rounded-md focus:outline-none focus:ring-2 focus:border-transparent',
+                    isHome
+                      ? 'bg-white/20 text-white placeholder:text-white/70 focus:ring-white/50'
+                      : 'bg-[#ededed] text-slate-900 dark:text-slate-100 placeholder:text-black dark:placeholder:text-slate-500 focus:ring-black dark:border-slate-700',
+                  )}
                 />
               </div>
             </Form>

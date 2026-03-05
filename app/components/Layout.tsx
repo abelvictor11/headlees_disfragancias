@@ -56,7 +56,7 @@ function MyHeader() {
       <DesktopMenuAside />
       <TopBarMarqueeWrap />
       {/* Main Header - Not sticky, scrolls with page */}
-      <div className="nc-Header z-40 relative">
+      <div className={`nc-Header z-40 ${isHome ? 'lg:absolute lg:top-0 lg:left-0 lg:right-0' : 'relative'}`}>
         <HeaderMenuDataWrap>
           {({headerData, headerMenu}) => {
             const brands = (headerData as any)?.brands?.nodes || [];
@@ -71,6 +71,7 @@ function MyHeader() {
                 <NavigationBar 
                   headerMenu={headerMenu?.items} 
                   headerData={headerData}
+                  isHome={isHome}
                 />
               </>
             );

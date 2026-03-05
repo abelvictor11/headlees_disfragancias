@@ -38,8 +38,8 @@ export function SectionHero(props: SectionHeroFragment) {
   const verticalVideo = (heroItem as any).vertical_video?.reference?.sources?.[0];
 
   return (
-    <div className="container px-4">
-      <div className="nc-SectionHero aspect-h-16 aspect-w-10 relative overflow-hidden rounded-2xl bg-[#efefef] sm:aspect-h-4 sm:aspect-w-3 lg:aspect-h-7 lg:aspect-w-16 2xl:aspect-w-16 2xl:aspect-h-7">
+    <div className="">
+      <div className="nc-SectionHero h-screen w-full relative overflow-hidden bg-[#efefef]">
         {/* BG */}
         <div className="absolute inset-0">
           {/* Desktop: Video or Image */}
@@ -82,7 +82,7 @@ export function SectionHero(props: SectionHeroFragment) {
         </div>
 
         {/* CONTENT */}
-        <div className="flex py-12 sm:py-14 lg:items-center lg:pb-20">
+        <div className="relative z-10 h-full flex items-center">
           <div className="container relative">
             <div className="flex max-w-lg flex-col items-start space-y-5 xl:max-w-2xl xl:space-y-8 ">
               {sub_heading?.value && (
