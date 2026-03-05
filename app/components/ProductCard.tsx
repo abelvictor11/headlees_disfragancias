@@ -94,6 +94,8 @@ const ProductCard: FC<ProductCardProps> = ({
 
   // State for selected color on hover - persists until another color is hovered
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
+  // State for selected size - updates price
+  const [selectedSize, setSelectedSize] = useState<string | null>(null);
   
   // Current active color: hovered one or first color as default
   const activeColor = selectedColor || optColor?.values?.[0] || null;
@@ -174,6 +176,27 @@ const ProductCard: FC<ProductCardProps> = ({
     );
   };
 
+  // Find variant for selected size
+  const getVariantForSize = (sizeName: string | null) => {
+    if (!sizeName || !variants?.nodes) return null;
+    return variants.nodes.find((v) =>
+      v.selectedOptions?.some(
+        (opt) => opt.name === 'Size' && opt.value === sizeName
+      )
+    );
+  };
+
+  const selectedSizeVariant = getVariantForSize(selectedSize);
+
+  // Active price/compareAtPrice based on selected size variant
+  const activePrice = selectedSizeVariant?.price || product.priceRange.minVariantPrice;
+  const activeCompareAtPrice = selectedSizeVariant?.compareAtPrice 
+    ? (Number(selectedSizeVariant.compareAtPrice.amount) > Number(selectedSizeVariant.price.amount) ? selectedSizeVariant.compareAtPrice : undefined)
+    : (isSale ? product.compareAtPriceRange?.minVariantPrice : undefined);
+
+  // Active variant for add to cart
+  const activeVariant = selectedSizeVariant || firstVariant;
+
   const renderSizeList = () => {
     const sizes = optSizes?.values;
 
@@ -217,6 +240,48 @@ const ProductCard: FC<ProductCardProps> = ({
             </Link>
           )}
         </div>
+      </div>
+    );
+  };
+
+  const renderVisibleSizeSelector = () => {
+    const sizes = optSizes?.values;
+    if (!sizes || sizes.length < 2) return null;
+
+    const activeSize = selectedSize || sizes[0];
+
+    return (
+      <div className="flex items-center gap-1.5 flex-wrap mt-2">
+        {sizes.slice(0, 5).map((size) => {
+          const isActive = size === activeSize;
+          return (
+            <button
+              key={size}
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setSelectedSize(size);
+              }}
+              className={`relative z-10 min-w-8 h-6 px-2 flex items-center justify-center text-xs font-medium rounded-md border transition-colors ${
+                isActive
+                  ? 'border-black bg-black text-white'
+                  : 'border-slate-200 bg-white text-slate-700 hover:border-slate-400'
+              }`}
+            >
+              {size}
+            </button>
+          );
+        })}
+        {sizes.length > 5 && (
+          <Link
+            to={variantUrl}
+            className="relative z-10 text-xs text-slate-500"
+            prefetch="intent"
+          >
+            +{sizes.length - 5}
+          </Link>
+        )}
       </div>
     );
   };
@@ -427,14 +492,13 @@ const ProductCard: FC<ProductCardProps> = ({
                 />
               </div>
             )}
+            {renderVisibleSizeSelector()}
             <div>
               <Prices
-                price={product.priceRange.minVariantPrice}
-                compareAtPrice={
-                  isSale ? product.compareAtPriceRange?.minVariantPrice : undefined
-                }
+                price={activePrice}
+                compareAtPrice={activeCompareAtPrice}
                 withoutTrailingZeros={
-                  Number(product.priceRange.minVariantPrice.amount || 1) > 99
+                  Number(activePrice.amount || 1) > 99
                 }
               />
             </div>

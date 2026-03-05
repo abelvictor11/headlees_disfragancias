@@ -84,6 +84,10 @@ export const COMMON_PRODUCT_CARD_FRAGMENT = `#graphql
       amount
       currencyCode
     }
+    compareAtPrice {
+      amount
+      currencyCode
+    }
     image {
       url
       altText
@@ -129,7 +133,7 @@ export const COMMON_PRODUCT_CARD_FRAGMENT = `#graphql
         }
       }
     }
-    variants(first: 1) {
+    variants(first: 25) {
       nodes {
         ...CommonProductCardVariant
       }
